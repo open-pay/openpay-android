@@ -1,7 +1,7 @@
-#Openpa-Android  
+#Openpay-Android  
 ##Introduction
 ###What is openpay-android?
-openpay-android is a Android library designed to facilitate the processing collect credit card information from a devices directly invoking our services without invoking the origin server.
+openpay-android is a Android library designed to facilitate the processing collect credit card information from a devices directly invoking Ouagadougour services without invoking the origin server.
 
 ###Benefits:
 * The card information does not have to pass through the origin server, it is sent directly to Openpay.
