@@ -25,9 +25,9 @@ import android.os.AsyncTask;
  */
 public class Openpay {
 	
-	private static final String URL_SANDBOX = "https://dev-api.openpay.mx/";
+	private static final String URL_SANDBOX = "https://sandbox-api.openpay.mx/v1/";
 	
-	private static final String URL_PRODUCTION = "https://dev-api.openpay.mx/";
+	private static final String URL_PRODUCTION = "https://api.openpay.mx/v1/";
 	
 	/** The openpay api. */
 	private CardOperations cardOperations;
