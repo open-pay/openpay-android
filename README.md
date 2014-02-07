@@ -97,6 +97,44 @@ openPay.createCard(CARD_OBJECT, {CUSTOMER-ID}, OPERATION_CALLBACK);
 The first parameter is a  object containing information about the card, the last  parameter define the methods that will be called after the operation was successful or failed (respectively).
 The definition of object card find it [here](http://docs.openpay.mx/#tarjetas).
 
+###Creating tokens
+To create a token, you need to call the method **Openpay.createToken()**:
+```java
+openPay.createToken(CARD_OBJECT, OPERATION_CALLBACK);
+```
+
+####Example of creating a token:
+```java
+
+	Card card = new Card();
+	card.holderName("Juan Perez Ramirez");
+	card.cardNumber("4111111111111111");
+	card.expirationMonth(12);
+	card.expirationYear(20);
+	card.cvv2("110");
+
+	openpay.createToken(card, new OperationCallBack() {
+				
+				@Override
+				public void onSuccess(OperationResult arg0) {
+					//Handlo in success
+				}
+				
+				@Override
+				public void onError(OpenpayServiceException arg0) {
+					//Handle Error
+				}
+				
+				@Override
+				public void onCommunicationError(ServiceUnavailableException arg0) {
+					//Handle communication error
+				}
+			});	
+```
+
+The first parameter is a  object containing information about the card, the last  parameter define the methods that will be called after the operation was successful or failed (respectively). The result will be a token object.
+The definition of Token object find it [here](http://docs.openpay.mx/#tokens).
+
 ###OperationCallBack methods
 The OperationCallBack serve as handles of the result of the card creation.
 
@@ -201,5 +239,17 @@ Receive two Integers as parameters to represent the month and year of expiry of 
 CardValidator.validateExpiryDate(1, 13); // inválido
 CardValidator.validateExpiryDate(5, 15); // válido
 ```
+
+##Fraud Protection and device id generation.
+
+As part of our anti-fraud strategy, we use the tools provided by [Kount](http://www.kount.com/) and in order to facilitate its use, we include inside the library an implementation of the data collector and the generation of device-id.  The datacollector detects and uses additional information like geolocation and device information to enable Kount's device fingerprinting. 
+
+The device-id is the device identifier that you need to provided when you make a charge. To generate a device-id you use the method **openpay.getDeviceCollectorDefaultImpl().getDeviceId()**. This method invoke the collect of  device data and send it  to kount.
+
+Every time you make a charge, you will provide an device-id. This device-id join to transaction data will be send to kount's servers to determine the transaction’s integrity.
+
+Note
+You can implement a specialized StatusListener and pass it to the collector. Check the classes mx.openpay.android.example.DeviceIdFragment and mx.openpay.android.DeviceCollectorDefaultImpl to see more.
+
 
 Take a look at the [openpay-pay-android-example](https://github.com/open-pay/openpay-android/tree/master/openpay-android-example) application to see everything put together.
