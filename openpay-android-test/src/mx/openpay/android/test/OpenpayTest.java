@@ -69,6 +69,14 @@ public class OpenpayTest extends InstrumentationTestCase {
 		this.signal.await();
 	}
 
+	@Test
+	public void createToken_ExpirationYearError() throws InterruptedException {
+		Card card = this.getCard();
+		card.expirationYear(12);
+		this.openpay.createToken(card, new LocalOperationCallBack());
+		this.signal.await();
+	}
+
 	private Address getAddres() {
 		return new Address().city("Mexico").countryCode("MX").line1("Calle de la felicidad").line2("Numero 20")
 				.line3("Col ensueño").postalCode("76900").state("Mexico");

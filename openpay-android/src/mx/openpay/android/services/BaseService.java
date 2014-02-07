@@ -40,11 +40,14 @@ import com.google.api.client.json.jackson2.JacksonFactory;
  *
  */
 public abstract class BaseService<V, T> {
-	public final static JsonFactory JSON_FACTORY = new JacksonFactory();
+	private final static JsonFactory JSON_FACTORY = new JacksonFactory();
 	private final static HttpTransport HTTP_TRANSPORT = AndroidHttp.newCompatibleTransport();
 	private final static String EMPTY_PASSWORD = "";
 	private final static String API_VERSION = "v1";
 	private final static String URL_SEPARATOR = "/";
+	private static final String AGENT = "openpay-android/";
+
+	private static final int DEFAULT_CONNECTION_TIMEOUT = 60000;
 
 	protected String baseUrl;
 	protected String merchantId;
@@ -60,15 +63,7 @@ public abstract class BaseService<V, T> {
 	}
 
 	public HttpRequestFactory getRequestFactory() {
-		return HTTP_TRANSPORT.createRequestFactory(new HttpRequestInitializer() {
-			@Override
-			public void initialize(final HttpRequest request) {
-				request.setParser(new JsonObjectParser(JSON_FACTORY));
-				request.getHeaders().setBasicAuthentication(BaseService.this.apiKey, EMPTY_PASSWORD);
-				request.getHeaders().setUserAgent("OpenPay-");
-				request.setUnsuccessfulResponseHandler(new ServiceUnsuccessfulResponseHandler());
-			}
-		});
+		return HTTP_TRANSPORT.createRequestFactory(new OpenpayHttpRequestInitializer());
 	}
 
 	public GenericUrl getGenericUrl(final String resourceUrl) {
@@ -97,15 +92,34 @@ public abstract class BaseService<V, T> {
 		}
 	}
 
-}
+	private class OpenpayHttpRequestInitializer implements HttpRequestInitializer {
+		@Override
+		public void initialize(final HttpRequest request) {
+			request.setParser(new JsonObjectParser(JSON_FACTORY));
+			request.getHeaders().setBasicAuthentication(BaseService.this.apiKey, EMPTY_PASSWORD);
+			String version = this.getClass().getPackage().getImplementationVersion();
+			if (version == null) {
+				version = "1.0.1-UNKNOWN";
+			}
+			request.setSuppressUserAgentSuffix(true);
+			request.getHeaders().setUserAgent(AGENT + version);
+			request.setUnsuccessfulResponseHandler(new ServiceUnsuccessfulResponseHandler());
+			request.setConnectTimeout(DEFAULT_CONNECTION_TIMEOUT);
+			request.setReadTimeout(DEFAULT_CONNECTION_TIMEOUT);
+		}
 
-class ServiceUnsuccessfulResponseHandler implements HttpUnsuccessfulResponseHandler {
-	@Override
-	public boolean handleResponse(final HttpRequest request, final HttpResponse response, final boolean arg2)
-			throws IOException {
-		OpenpayServiceException exception = new JsonObjectParser(BaseService.JSON_FACTORY).parseAndClose(
-				response.getContent(), response.getContentCharset(), OpenpayServiceException.class);
-		throw exception;
+		private class ServiceUnsuccessfulResponseHandler implements HttpUnsuccessfulResponseHandler {
+			@Override
+			public boolean handleResponse(final HttpRequest request, final HttpResponse response, final boolean arg2)
+					throws IOException {
+				OpenpayServiceException exception = new JsonObjectParser(BaseService.JSON_FACTORY).parseAndClose(
+						response.getContent(), response.getContentCharset(), OpenpayServiceException.class);
+				throw exception;
+			}
+
+		}
 	}
 
 }
+
+
