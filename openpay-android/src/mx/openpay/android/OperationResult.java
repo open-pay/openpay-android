@@ -10,15 +10,14 @@
 
 package mx.openpay.android;
 
-import mx.openpay.client.Card;
 
 /**
  * The Class OperationResult.
  */
-public class OperationResult {
+public class OperationResult<T> {
 
 	/** The card. */
-	private Card card;
+	private T result;
 	
 	
 	/**
@@ -26,8 +25,8 @@ public class OperationResult {
 	 *
 	 * @param card the card
 	 */
-	public OperationResult(final Card card) {
-		this.card = card;
+	public OperationResult(final T result) {
+		this.result = result;
 	}
 
 	/**
@@ -35,7 +34,7 @@ public class OperationResult {
 	 *
 	 * @return the card
 	 */
-	public Card getCard() {
-		return card;
+	public T getResult() {
+		return this.result;
 	}
 }

@@ -11,7 +11,22 @@
         android:layout_height="wrap_content"
         android:text="@string/add_card"
         android:textAppearance="?android:attr/textAppearanceMedium" />
+<RadioGroup 
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <RadioButton
+        android:id="@+id/radioButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/card" />
 
+    <RadioButton
+        android:id="@+id/radioButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/token" />
+</RadioGroup>
     <EditText
         android:id="@+id/holder_name"
         android:layout_width="fill_parent"
@@ -55,5 +70,25 @@
         android:layout_height="wrap_content"
         android:onClick="saveCard"
         android:text="@string/button_save" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/getSessionId"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <Button
+        android:id="@+id/button1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="getDeviceId"
+        android:text="@string/checkout" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/sessionId" />
 
 </LinearLayout>

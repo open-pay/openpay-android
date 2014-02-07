@@ -18,12 +18,12 @@ public class OpenPayAppExample extends Application {
 	
 	public OpenPayAppExample() {
 
-		this.openpay = new Openpay("mdlisypwjvj3hzbg7xmd", "mskjdnfhbcfdmxamisdhusdhfsf", false);
+		this.openpay = new Openpay("mh9ovicn5oqq2wgpyo1v", "pk_4f007c56b11e46189100740e593ee747", false);
 	}
 	
 	
-	public Openpay getopenpay() {
-		return openpay;
+	public Openpay getOpenpay() {
+		return this.openpay;
 	}
 
 }

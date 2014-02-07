@@ -9,71 +9,65 @@
  */
 package mx.openpay.android;
 
-import mx.openpay.client.Card;
-import mx.openpay.client.core.HttpServiceClient;
-import mx.openpay.client.core.JsonSerializer;
-import mx.openpay.client.core.JsonServiceClient;
-import mx.openpay.client.core.impl.DefaultHttpServiceClient;
-import mx.openpay.client.core.impl.DefaultSerializer;
-import mx.openpay.client.core.operations.CardOperations;
-import mx.openpay.client.exceptions.OpenpayServiceException;
-import mx.openpay.client.exceptions.ServiceUnavailableException;
+import mx.openpay.android.exceptions.OpenpayServiceException;
+import mx.openpay.android.exceptions.ServiceUnavailableException;
+import mx.openpay.android.model.Card;
+import mx.openpay.android.model.Token;
+import mx.openpay.android.services.CardService;
+import mx.openpay.android.services.ServicesFactory;
+import mx.openpay.android.services.TokenService;
 import android.os.AsyncTask;
 
 /**
  * The Class OpenPay.
  */
 public class Openpay {
-	
+
 	private static final String URL_SANDBOX = "https://sandbox-api.openpay.mx";
-	
+
 	private static final String URL_PRODUCTION = "https://api.openpay.mx";
-	
+
+	public static final String OPENPAY_MERCHANT_ID = "203000";
+
 	/** The openpay api. */
-	private CardOperations cardOperations;
-	
+	private CardService cardService;
+	private TokenService tokenService;
+	private DefaultDeviceCollectorImpl defaultDeviceCollectorImpl;
+
 	/**
 	 * Instantiates a new open pay.
-	 *
-	 * @param merchantId the merchant id
-	 * @param apiKey the api key
+	 * 
+	 * @param merchantId
+	 *            the merchant id
+	 * @param apiKey
+	 *            the api key
 	 */
 	public Openpay(final String merchantId, final String apiKey, final Boolean productionMode) {
-		String url = URL_SANDBOX;
-		
+		String baseUrl = URL_SANDBOX;
 		if (productionMode) {
-			url = URL_PRODUCTION;
+			baseUrl = URL_PRODUCTION;
 		}
-		
-		JsonSerializer serializer = new DefaultSerializer();
-		HttpServiceClient httpClient = new DefaultHttpServiceClient(false);
-		JsonServiceClient jsonServiceClient = new JsonServiceClient(url, merchantId, apiKey, serializer , httpClient);
-		this.cardOperations = new CardOperations(jsonServiceClient);
+		ServicesFactory servicesFactory = ServicesFactory.getInstance(baseUrl, merchantId, apiKey);
+		this.cardService = servicesFactory.getService(CardService.class);
+		this.tokenService = servicesFactory.getService(TokenService.class);
+		this.defaultDeviceCollectorImpl = new DefaultDeviceCollectorImpl(baseUrl);
 	}
 
-	
-	 /**
-	  * 
+	/**
+	 * 
 	 * @param customerId
 	 * @param card
 	 * @return
 	 */
-	public void createCard(final Card card, final String customerId, final OperationCallBack operationCallBack){
-		new AsyncTask<Void, Void, OpenPayResult>() {
+	public void createCard(final Card card, final String customerId, final OperationCallBack<Card> operationCallBack) {
+		new AsyncTask<Void, Void, OpenPayResult<Card>>() {
 
 			@Override
-			protected OpenPayResult doInBackground(final Void... params) {
-				OpenPayResult openPayResult = new OpenPayResult();
+			protected OpenPayResult<Card> doInBackground(final Void... params) {
+				OpenPayResult<Card> openPayResult = new OpenPayResult<Card>();
 				try {
-					Card newCard;
-					
-					if (customerId == null) {
-						newCard = Openpay.this.cardOperations.create(card);
-					} else {
-						newCard = Openpay.this.cardOperations.create(customerId, card);
-					}
-					
-					openPayResult.setOperationResult(new OperationResult(newCard));
+					Card newCard = Openpay.this.cardService.create(card, customerId);
+					openPayResult.setOperationResult(new OperationResult<Card>(newCard));
 				} catch (OpenpayServiceException e) {
 					openPayResult.setOpenpayServiceException(e);
 				} catch (ServiceUnavailableException e) {
@@ -81,66 +75,68 @@ public class Openpay {
 				}
 				return openPayResult;
 			}
-			
-			 protected void onPostExecute(final OpenPayResult result) {
-				 
-				 if (result.getOperationResult() != null){
-					 operationCallBack.onSuccess(result.getOperationResult());
-				 } else  if (result.getOpenpayServiceException() != null) {
-					 operationCallBack.onError(result.getOpenpayServiceException());
-				 } else  if (result.getServiceUnavailableException() != null) {
-					 operationCallBack.onCommunicationError(result.getServiceUnavailableException());
-				 }  
-				 
-            }
-			
+
+			protected void onPostExecute(final OpenPayResult<Card> result) {
+
+				if (result.getOperationResult() != null) {
+					operationCallBack.onSuccess(result.getOperationResult());
+				} else if (result.getOpenpayServiceException() != null) {
+					operationCallBack.onError(result.getOpenpayServiceException());
+				} else if (result.getServiceUnavailableException() != null) {
+					operationCallBack.onCommunicationError(result.getServiceUnavailableException());
+				}
+
+			}
+
 		}.execute();
-		
-	
-	 }
-	
+
+	}
+
 	/**
 	 * Creates the card.
-	 *
-	 * @param cardParams the card params
-	 * @param operationCallBack the operation call back
+	 * 
+	 * @param cardParams
+	 *            the card params
+	 * @param operationCallBack
+	 *            the operation call back
 	 */
-	public void createCard(final Card card, final OperationCallBack operationCallBack){
+	public void createCard(final Card card, final OperationCallBack<Card> operationCallBack) {
 		this.createCard(card, null, operationCallBack);
 	}
-}
 
-class OpenPayResult {
-	
-	private OpenpayServiceException openpayServiceException;
-	
-	private OperationResult operationResult;
-	
-	private ServiceUnavailableException serviceUnavailableException;
+	public void createToken(final Card card, final OperationCallBack<Token> operationCallBack) {
+		new AsyncTask<Void, Void, OpenPayResult<Token>>() {
 
-	public OpenpayServiceException getOpenpayServiceException() {
-		return openpayServiceException;
+			@Override
+			protected OpenPayResult<Token> doInBackground(final Void... params) {
+				OpenPayResult<Token> openPayResult = new OpenPayResult<Token>();
+				try {
+					Token newToken = Openpay.this.tokenService.create(card);
+					openPayResult.setOperationResult(new OperationResult<Token>(newToken));
+				} catch (OpenpayServiceException e) {
+					openPayResult.setOpenpayServiceException(e);
+				} catch (ServiceUnavailableException e) {
+					openPayResult.setServiceUnavailableException(e);
+				}
+				return openPayResult;
+			}
+
+			protected void onPostExecute(final OpenPayResult<Token> result) {
+
+				if (result.getOperationResult() != null) {
+					operationCallBack.onSuccess(result.getOperationResult());
+				} else if (result.getOpenpayServiceException() != null) {
+					operationCallBack.onError(result.getOpenpayServiceException());
+				} else if (result.getServiceUnavailableException() != null) {
+					operationCallBack.onCommunicationError(result.getServiceUnavailableException());
+				}
+
+			}
+
+		}.execute();
 	}
 
-	public void setOpenpayServiceException(
-			OpenpayServiceException openpayServiceException) {
-		this.openpayServiceException = openpayServiceException;
-	}
-
-	public OperationResult getOperationResult() {
-		return operationResult;
-	}
-
-	public void setOperationResult(OperationResult operationResult) {
-		this.operationResult = operationResult;
-	}
-
-	public ServiceUnavailableException getServiceUnavailableException() {
-		return serviceUnavailableException;
-	}
-
-	public void setServiceUnavailableException(
-			ServiceUnavailableException serviceUnavailableException) {
-		this.serviceUnavailableException = serviceUnavailableException;
+	public DefaultDeviceCollectorImpl getDefaultDeviceCollectorImpl() {
+		return this.defaultDeviceCollectorImpl;
 	}
 }

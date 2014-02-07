@@ -9,32 +9,32 @@
  */
 package mx.openpay.android;
 
-import mx.openpay.client.exceptions.OpenpayServiceException;
-import mx.openpay.client.exceptions.ServiceUnavailableException;
+import mx.openpay.android.exceptions.OpenpayServiceException;
+import mx.openpay.android.exceptions.ServiceUnavailableException;
 
 /**
  * The Interface OperationCallBack.
  */
-public interface OperationCallBack {
+public interface OperationCallBack<T> {
 
 	/**
 	 * On error.
 	 *
 	 * @param error the error
 	 */
-	void onError(OpenpayServiceException error);
+	void onError(final OpenpayServiceException error);
 	
 	/**
 	 * On communication error.
 	 *
 	 * @param error the error
 	 */
-	void onCommunicationError(ServiceUnavailableException error);
+	void onCommunicationError(final ServiceUnavailableException error);
     
     /**
      * On success.
      *
      * @param operationResult the operation result
      */
-    void onSuccess(OperationResult operationResult);
+	void onSuccess(final OperationResult<T> operationResult);
 }

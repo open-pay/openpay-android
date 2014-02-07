@@ -55,5 +55,10 @@
         <item>11</item>
         <item>12</item>
     </string-array>
-        <string name="add_card">Agregar Tarjeta</string>
+        <string name="add_card">Agregar</string>
+        <string name="checkout">Generar</string>
+        <string name="sessionId">DeviceId: </string>
+        <string name="getSessionId">Generar DeviceId</string>
+        <string name="card">Tarjeta</string>
+        <string name="token">Token</string>
 </resources>

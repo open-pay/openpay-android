@@ -28,12 +28,17 @@ public final class R {
         public static final int ic_launcher=0x7f020000;
     }
     public static final class id {
-        public static final int card_number=0x7f080002;
-        public static final int cvv2=0x7f080003;
-        public static final int holder_name=0x7f080001;
-        public static final int month_spinner=0x7f080005;
+        public static final int button1=0x7f080009;
+        public static final int card_number=0x7f080004;
+        public static final int cvv2=0x7f080005;
+        public static final int holder_name=0x7f080003;
+        public static final int month_spinner=0x7f080007;
+        public static final int radioButton1=0x7f080001;
+        public static final int radioButton2=0x7f080002;
         public static final int textView1=0x7f080000;
-        public static final int year_spinner=0x7f080004;
+        public static final int textView2=0x7f080008;
+        public static final int textView3=0x7f08000a;
+        public static final int year_spinner=0x7f080006;
     }
     public static final class layout {
         public static final int activity_add_card=0x7f030000;
@@ -44,15 +49,18 @@ public final class R {
         public static final int already_exists=0x7f040016;
         public static final int app_name=0x7f040000;
         public static final int button_save=0x7f040002;
+        public static final int card=0x7f04001c;
         public static final int card_added=0x7f04000a;
         public static final int card_created=0x7f040001;
         public static final int card_number=0x7f040006;
+        public static final int checkout=0x7f040019;
         public static final int communication_error=0x7f040015;
         public static final int cvv=0x7f040007;
         public static final int declined=0x7f040010;
         public static final int error=0x7f040009;
         public static final int error_creating_card=0x7f040017;
         public static final int expired=0x7f040011;
+        public static final int getSessionId=0x7f04001b;
         public static final int holder_name=0x7f040005;
         public static final int info=0x7f040008;
         public static final int insufficient_funds=0x7f040012;
@@ -61,9 +69,11 @@ public final class R {
         public static final int invalid_expire_date=0x7f04000e;
         public static final int invalid_holder_name=0x7f04000c;
         public static final int progress_message=0x7f04000f;
+        public static final int sessionId=0x7f04001a;
         public static final int stolen_card=0x7f040013;
         public static final int suspected_fraud=0x7f040014;
         public static final int title_activity_main=0x7f040004;
+        public static final int token=0x7f04001d;
     }
     public static final class style {
         /** 
