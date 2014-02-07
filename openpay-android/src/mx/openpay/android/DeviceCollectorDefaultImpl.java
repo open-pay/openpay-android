@@ -22,7 +22,7 @@ import com.devicecollector.DeviceCollector.ErrorCode;
  * @author Luis Delucio
  *
  */
-public class DefaultDeviceCollectorImpl implements DeviceCollector.StatusListener {
+public class DeviceCollectorDefaultImpl implements DeviceCollector.StatusListener {
 
 	private DeviceCollector dc;
 	private Date startTime = new Date();
@@ -38,7 +38,7 @@ public class DefaultDeviceCollectorImpl implements DeviceCollector.StatusListene
 		this.statusListener = statusListener;
 	}
 
-	public DefaultDeviceCollectorImpl(final String baseUrl) {
+	public DeviceCollectorDefaultImpl(final String baseUrl) {
 		this.baseUrl = baseUrl;
 	}
 

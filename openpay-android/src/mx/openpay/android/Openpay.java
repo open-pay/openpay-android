@@ -32,7 +32,7 @@ public class Openpay {
 	/** The openpay api. */
 	private CardService cardService;
 	private TokenService tokenService;
-	private DefaultDeviceCollectorImpl defaultDeviceCollectorImpl;
+	private DeviceCollectorDefaultImpl deviceCollectorDefaultImpl;
 
 	/**
 	 * Instantiates a new open pay.
@@ -50,7 +50,7 @@ public class Openpay {
 		ServicesFactory servicesFactory = ServicesFactory.getInstance(baseUrl, merchantId, apiKey);
 		this.cardService = servicesFactory.getService(CardService.class);
 		this.tokenService = servicesFactory.getService(TokenService.class);
-		this.defaultDeviceCollectorImpl = new DefaultDeviceCollectorImpl(baseUrl);
+		this.deviceCollectorDefaultImpl = new DeviceCollectorDefaultImpl(baseUrl);
 	}
 
 	/**
@@ -136,7 +136,7 @@ public class Openpay {
 		}.execute();
 	}
 
-	public DefaultDeviceCollectorImpl getDefaultDeviceCollectorImpl() {
-		return this.defaultDeviceCollectorImpl;
+	public DeviceCollectorDefaultImpl getDeviceCollectorDefaultImpl() {
+		return this.deviceCollectorDefaultImpl;
 	}
 }

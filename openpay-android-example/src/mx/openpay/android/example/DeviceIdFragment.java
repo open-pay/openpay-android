@@ -36,9 +36,9 @@ public class DeviceIdFragment extends Fragment {
    */
 	public String getDeviceId() {
 		Openpay openpay = ((OpenPayAppExample) this.getActivity().getApplication()).getOpenpay();
-		String deviceIdString = openpay.getDefaultDeviceCollectorImpl().getDeviceId(this.getActivity());
+		String deviceIdString = openpay.getDeviceCollectorDefaultImpl().getDeviceId(this.getActivity());
 		if (deviceIdString == null) {
-			this.printMsg(openpay.getDefaultDeviceCollectorImpl().getErrorMessage());
+			this.printMsg(openpay.getDeviceCollectorDefaultImpl().getErrorMessage());
 		} else {
 			this.printMsg(deviceIdString);
 		}
