@@ -38,11 +38,7 @@ public class DeviceCollectorDefaultImpl implements DeviceCollector.StatusListene
 	private boolean hasError = false;
 	private String errorMessage;
 	private String baseUrl;
-	private DeviceCollector.StatusListener statusListener;
-
-	public void setStatusListener(final DeviceCollector.StatusListener statusListener) {
-		this.statusListener = statusListener;
-	}
+	private Long cancelSetupTime = 10000L;
 
 	public DeviceCollectorDefaultImpl(final String baseUrl) {
 		this.baseUrl = baseUrl;
@@ -52,7 +48,7 @@ public class DeviceCollectorDefaultImpl implements DeviceCollector.StatusListene
 		return this.errorMessage;
 	}
 
-	public String getDeviceId(final Activity activity) {
+	public String setup(final Activity activity, final DeviceCollector.StatusListener statusListener) {
 		if (this.sessionId == null || this.sessionId.equals("")) {
 			this.sessionId = UUID.randomUUID().toString();
 			this.sessionId = this.sessionId.replace("-", "");
@@ -60,8 +56,8 @@ public class DeviceCollectorDefaultImpl implements DeviceCollector.StatusListene
 		if(this.dc == null) {
 			this.dc = new DeviceCollector(activity);
 		}
-		if (this.statusListener != null) {
-			this.dc.setStatusListener(this.statusListener);
+		if (statusListener != null) {
+			this.dc.setStatusListener(statusListener);
 			this.collect();
 		} else {
 			if (!this.running) {
@@ -74,13 +70,17 @@ public class DeviceCollectorDefaultImpl implements DeviceCollector.StatusListene
 			} else {
 				this.debug("Already running\n");
 				long totalTime = this.getTotalTime();
-				if (totalTime >= 10000) {
-					this.cancelGetDeviceId();
+				if (totalTime >= this.cancelSetupTime) {
+					this.cancelSetup();
 				}
 			}
 
 		}
 		return this.sessionId;
+	}
+
+	public String setup(final Activity activity) {
+		return this.setup(activity, null);
 	}
 
 	private void collect() {
@@ -95,7 +95,7 @@ public class DeviceCollectorDefaultImpl implements DeviceCollector.StatusListene
 	/**
 	 * Tell the library to stop immediately.
 	 */
-	public void cancelGetDeviceId() {
+	public void cancelSetup() {
 		if (!this.finished && this.running && null != this.dc) {
 			this.debug("Trying to stop...\n");
 			this.dc.stopNow();
@@ -152,6 +152,14 @@ public class DeviceCollectorDefaultImpl implements DeviceCollector.StatusListene
 
 	private void debug(final String string) {
 		Log.d(this.getClass().getName(), string);
+	}
+
+	public Long getCancelSetupTime() {
+		return this.cancelSetupTime;
+	}
+
+	public void setCancelSetupTime(final Long cancelSetupTime) {
+		this.cancelSetupTime = cancelSetupTime;
 	}
 }
 
