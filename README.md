@@ -13,7 +13,7 @@ openpay-android is a Android library designed to facilitate the processing colle
 2. You must have installed the Android SDK with API Level 19 and android-support-v4
 3. Add the openpay-android library to your project. (project properties,"Android" category, "Library" section, and add, select the openpay-android project).
 
-###Configuration
+##Configuration
 Before you can use openpay-android is necessary to configure: merchant id, public key and production Mode
 
 The merchant id and public key were assigned when you created your account. With these data, Openpay can identify the account.
@@ -23,6 +23,10 @@ You must configure openpay  when instatiate it:
 ```java
 	Openpay openpay = new Openpay("MERCHANT_ID", "PUBLIC_API_KEY", productionMode);
 ```
+
+###Enable sandbox Mode
+To test your implementation, there Sandox environment, which is enabled when you pass **false** value to parameter **productionMode**
+
 |Notes:|
 |:------|
 |* Both MERCHANTID as PUBLIC_API_KEY, are obtained from the homepage of your account on the [Openpay](http://www.openpay.mx/) site.|
