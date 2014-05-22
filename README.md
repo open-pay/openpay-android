@@ -28,75 +28,6 @@ You must configure openpay  when instatiate it:
 |* Both MERCHANTID as PUBLIC_API_KEY, are obtained from the homepage of your account on the [Openpay](http://www.openpay.mx/) site.|
 |* You should never use your private key along with the library, because it is visible on the client side.|
 
-###Creating cards
-To create a card, you need to call the method **Openpay.createCard()**:
-```java
-openPay.createCard(CARD_OBJECT, {CUSTOMER-ID}, OPERATION_CALLBACK);
-```
-
-|Notes|
-|:----|
-|* With this method you can create cards at both merchant and customers depending on if you include the **CUSTOMER-ID** in the call or not. The **CUSTOMER-ID** parameter is optional.|
-|* You can see the **CUSTOMER-ID**, into dashboard from the list customers.|
-####Example of creating a merchant card:
-```java
-
-	Card card = new Card();
-	card.holderName("Juan Perez Ramirez");
-	card.cardNumber("4111111111111111");
-	card.expirationMonth(12);
-	card.expirationYear(20);
-	card.cvv2("110");
-
-	openpay.createCard(card, new OperationCallBack() {
-				
-				@Override
-				public void onSuccess(OperationResult arg0) {
-					//Handlo in success
-				}
-				
-				@Override
-				public void onError(OpenpayServiceException arg0) {
-					//Handle Error
-				}
-				
-				@Override
-				public void onCommunicationError(ServiceUnavailableException arg0) {
-					//Handle communication error
-				}
-			});	
-```
-####Example of creating customer card:
-```java
-
-	Card card = new Card();
-	card.holderName("Juan Perez Ramirez");
-	card.cardNumber("4111111111111111");
-	card.expirationMonth(12);
-	card.expirationYear(20);
-	card.cvv2("110");
-
-	openpay.createCard(card, "aos2jvwpyyy4nhbodxbu", new OperationCallBack() {
-				
-				@Override
-				public void onSuccess(OperationResult arg0) {
-					//Handlo in success
-				}
-				
-				@Override
-				public void onError(OpenpayServiceException arg0) {
-					//Handle Error
-				}
-				
-				@Override
-				public void onCommunicationError(ServiceUnavailableException arg0) {
-					//Handle communication error
-				}
-			});	
-``` 
-The first parameter is a  object containing information about the card, the last  parameter define the methods that will be called after the operation was successful or failed (respectively).
-The definition of object card find it [here](http://docs.openpay.mx/#tarjetas).
-
 ###Creating tokens
 To create a token, you need to call the method **Openpay.createToken()**:
 ```java
@@ -240,16 +171,19 @@ CardValidator.validateExpiryDate(1, 13); // inválido
 CardValidator.validateExpiryDate(5, 15); // válido
 ```
 
-##Fraud Protection and device id generation.
+##Fraud detection using device data
+OpenPay can use the device information of a transaction in order to better detect fraudulent transactions.
+To do this, add the following code to your activity or fragment, when collecting payment information:
 
-As part of our anti-fraud strategy, we use the tools provided by [Kount](http://www.kount.com/) and in order to facilitate its use, we include inside the library an implementation of the data collector and the generation of device-id.  The datacollector detects and uses additional information like geolocation and device information to enable Kount's device fingerprinting. 
+```java
+String deviceIdString = openpay.getDeviceCollectorDefaultImpl().setup(activity);
+```
 
-The device-id is the device identifier that you need to provided when you make a charge. To generate a device-id you use the method **openpay.getDeviceCollectorDefaultImpl().getDeviceId()**. This method invoke the collect of  device data and send it  to kount.
+This method generates an identifier for the customer's device data. This value needs to be stored during checkout, and sent to OpenPay when processing the charge.
 
-Every time you make a charge, you will provide an device-id. This device-id join to transaction data will be send to kount's servers to determine the transaction’s integrity.
+The method takes one parameter: 
 
-Note
-You can implement a specialized StatusListener and pass it to the collector. Check the classes mx.openpay.android.example.DeviceIdFragment and mx.openpay.android.DeviceCollectorDefaultImpl to see more.
+Activity. The actual activity object.
 
 
 Take a look at the [openpay-pay-android-example](https://github.com/open-pay/openpay-android/tree/master/openpay-android-example) application to see everything put together.
