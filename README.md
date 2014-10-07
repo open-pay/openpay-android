@@ -10,7 +10,7 @@ openpay-android is a Android library designed to facilitate the processing colle
 ##Installation
 
 1. Clone the git repository.
-2. You must have installed the Android SDK with API Level 19 and android-support-v4
+2. You must have installed the Android SDK with API Level 7-19 and android-support-v4
 3. Add the openpay-android library to your project. (project properties,"Android" category, "Library" section, and add, select the openpay-android project).
 
 ##Configuration
