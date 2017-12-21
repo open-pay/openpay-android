@@ -1,0 +1,3 @@
+include ':openpay-android'
+include ':openpay-android-example'
+include ':openpay-android-test'
