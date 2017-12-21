@@ -1,0 +1,14 @@
+v2/openpay-android/build
+v2/openpay-android-test/build
+v2/openpay-android-example/build
+v2/build
+v2/gradle
+v2/.idea
+v2/.gradle
+local.properties
+gradlew.bat
+gradlew
+v2/v2.iml
+v2/openpay-android/openpay-android.iml
+v2/openpay-android-example/openpay-android-example.iml
+v2/openpay-android-test/openpay-android-test.iml
