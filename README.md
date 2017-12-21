@@ -1,7 +1,10 @@
 ![Openpay-Android](http://www.openpay.mx/img/github/android.jpg)
 ##Introduction
 ###What is openpay-android?
+
 openpay-android is a Android library designed to facilitate the processing collect credit card information from a devices directly invoking our services without invoking the origin server.
+
+Current version : v1.1.0
 
 ###Benefits:
 * The card information does not have to pass through the origin server, it is sent directly to Openpay.
@@ -9,9 +12,18 @@ openpay-android is a Android library designed to facilitate the processing colle
 
 ##Installation
 
-1. Clone the git repository.
-2. You must have installed the Android SDK with API Level 7-19 and android-support-v4
-3. Add the openpay-android library to your project. (project properties,"Android" category, "Library" section, and add, select the openpay-android project).
+1. Download de latest SDK released version
+2. You must have installed the Android SDK with API Level 19-27 and android-support-v13
+3. Add the openpay-android library to your project
+4. Add the needed dependencies:
+
+dependencies {
+    compile 'com.android.support:support-v13:27.0.2'
+    compile 'com.google.http-client:google-http-client:1.23.0'
+    compile 'com.google.http-client:google-http-client-android:1.23.0'
+    compile 'com.google.http-client:google-http-client-jackson2:1.23.0'
+    compile 'com.fasterxml.jackson.core:jackson-core:2.9.2'
+}
 
 ##Configuration
 Before you can use openpay-android is necessary to configure: merchant id, public key and production Mode
