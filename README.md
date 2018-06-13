@@ -10,7 +10,7 @@ Current version: v2.0.0
 
 ## Installation
 
-1. Download de latest SDK released version (SDK-v2.0.0.zip).
+1. Download de latest SDK released version (https://github.com/open-pay/openpay-android/releases/download/v2.0.0/SDK-v2.0.0.zip).
 2. You must have installed the Android SDK with API Level 19-27 and android-support-v13.
 3. Add the openpay-android library (openpay-v2.0.0.aar) to your project.
 4. Add the needed dependencies to your project:
