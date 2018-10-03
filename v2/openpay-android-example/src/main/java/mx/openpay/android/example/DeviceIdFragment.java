@@ -30,7 +30,7 @@ import android.widget.TextView;
  * @version SVN: $Id: CheckoutFragment.java 24966 2013-12-18 16:55:23Z gjd $
  * @copyright 2013 Kount, Inc. All Rights Reserved.
  */
-@TargetApi (Build.VERSION_CODES.KITKAT)
+@TargetApi (Build.VERSION_CODES.JELLY_BEAN)
 public class DeviceIdFragment extends Fragment {
 
   /**

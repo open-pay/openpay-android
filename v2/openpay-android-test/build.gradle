@@ -2,13 +2,13 @@ apply plugin: 'com.android.application'
 
 android {
 
-    compileSdkVersion 27
-    buildToolsVersion "27.0.1"
+    compileSdkVersion 16
+    //buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "mx.openpay.android.test"
-        minSdkVersion 19
-        targetSdkVersion 27
+        minSdkVersion 16
+       // targetSdkVersion 26
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -30,6 +30,6 @@ android {
 dependencies {
     compile project(':openpay-android')
     compile 'com.android.support:support-annotations:24.0.0'
-    compile 'com.android.support.test:runner:0.5'
-    compile 'com.android.support.test:rules:0.5'
+    compile 'com.android.support.test:runner:1.0.2'
+    compile 'com.android.support.test:rules:1.0.2'
 }

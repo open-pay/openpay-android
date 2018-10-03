@@ -54,7 +54,7 @@ public class DeviceCollectorDefaultImpl {
             webViewDF.setWebViewClient(new WebViewClient());
             webViewDF.getSettings().setJavaScriptEnabled(true);
             String identifierForVendorScript = String.format("var identifierForVendor = '%s';", identifierForVendor);
-            webViewDF.evaluateJavascript(identifierForVendorScript, null);
+           // webViewDF.evaluateJavascript(identifierForVendorScript, null);
 
             // Ejecutamos OpenControl
             String urlAsString = String.format("%s/oa/logo.htm?m=%s&s=%s", this.baseUrl, this.merchantId, sessionId);
