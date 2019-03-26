@@ -2,7 +2,7 @@
 
 Android library designed to facilitate the processing collect credit card information from a devices directly invoking our services without invoking the origin server.
 
-Current version: v2.0.1
+Current version: v2.0.2
 
 ## Benefits:
 * The card information does not have to pass through the origin server, it is sent directly to Openpay.
@@ -10,18 +10,18 @@ Current version: v2.0.1
 
 ## Installation
 
-1. Download de latest SDK released version (https://github.com/open-pay/openpay-android/releases/download/v2.0.1/SDK-v2.0.1.zip).
-2. You must have installed the Android SDK with API Level 19-27 and android-support-v13.
+1. Download de latest SDK released version (https://github.com/open-pay/openpay-android/releases/download/v2.0.2/SDK-v2.0.2.zip).
+2. You must have installed the Android SDK with API Level 19-28 and android-support-v13.
 3. Add the openpay-android library (openpay-v2.0.1.aar) to your project.
 4. Add the needed dependencies to your project:
 
 ```java
 dependencies {
-    compile 'com.android.support:support-v13:27.0.2'
-    compile 'com.google.http-client:google-http-client:1.23.0'
-    compile 'com.google.http-client:google-http-client-android:1.23.0'
-    compile 'com.google.http-client:google-http-client-jackson2:1.23.0'
-    compile 'com.fasterxml.jackson.core:jackson-core:2.9.2'
+    implementation 'com.android.support:support-v13:28.0.0'
+    implementation 'com.google.http-client:google-http-client:1.28.0'
+    implementation 'com.google.http-client:google-http-client-android:1.28.0'
+    implementation 'com.google.http-client:google-http-client-jackson2:1.28.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.8'
 }
 ```
 
@@ -202,4 +202,4 @@ The method takes one parameter:
 Activity. The actual activity object.
 
 
-Take a look at the [openpay-pay-android-example](https://github.com/open-pay/openpay-android/tree/master/v2/openpay-android-example) application to see everything put together.
+Take a look at the [openpay-android-example](https://github.com/open-pay/openpay-android) application to see everything put together.
