@@ -1,1 +1,0 @@
-Los test se mueven al proyecto openpay-android-test para que puedan ser ejecutados.

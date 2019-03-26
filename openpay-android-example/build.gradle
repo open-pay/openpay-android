@@ -1,0 +1,48 @@
+apply plugin: 'com.android.application'
+
+android {
+
+    compileSdkVersion 28
+    buildToolsVersion "28.0.3"
+
+    defaultConfig {
+        applicationId "mx.openpay.android.example"
+        minSdkVersion 19
+        targetSdkVersion 28
+    }
+
+    buildTypes {
+
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+
+    }
+
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation 'com.android.support:support-fragment:28.0.0'
+    implementation 'com.google.http-client:google-http-client:1.28.0'
+    implementation 'com.google.http-client:google-http-client-android:1.28.0'
+    implementation 'com.google.http-client:google-http-client-jackson2:1.28.0'
+    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.8'
+    implementation 'org.slf4j:slf4j-log4j12:1.7.25'
+    implementation project(':openpay')
+}

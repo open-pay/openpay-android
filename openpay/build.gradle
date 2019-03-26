@@ -1,0 +1,7 @@
+configurations.maybeCreate("default")
+
+artifacts.add("default", file('openpay-v2.0.2.aar'))
+
+dependencies {
+
+}
