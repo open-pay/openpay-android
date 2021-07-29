@@ -21,7 +21,9 @@ import mx.openpay.android.OperationResult;
 import mx.openpay.android.exceptions.OpenpayServiceException;
 import mx.openpay.android.exceptions.ServiceUnavailableException;
 import mx.openpay.android.model.Card;
+import mx.openpay.android.model.Token;
 import mx.openpay.android.validation.CardValidator;
+
 import android.app.DialogFragment;
 import android.app.FragmentManager;
 import android.os.Bundle;
@@ -30,161 +32,168 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
+import android.widget.TextView;
 
-public class AddCardActivity extends FragmentActivity implements OperationCallBack {
+public class AddCardActivity extends FragmentActivity implements OperationCallBack<Token> {
 
-	private ProgressDialogFragment progressFragment;
+    private ProgressDialogFragment progressFragment;
 
-	private DeviceIdFragment deviceIdFragment;
+    private DeviceIdFragment deviceIdFragment;
 
-	@Override
-	protected void onCreate(final Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		this.setContentView(R.layout.activity_add_card);
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        this.setContentView(R.layout.activity_add_card);
 
-		this.progressFragment = ProgressDialogFragment.newInstance(R.string.progress_message);
+        this.progressFragment = ProgressDialogFragment.newInstance(R.string.progress_message);
 
-		FragmentManager fm = this.getFragmentManager();
-		this.deviceIdFragment = (DeviceIdFragment) fm.findFragmentByTag("DeviceCollector");
-		// If not retained (or first time running), we need to create it.
-		if (this.deviceIdFragment == null) {
-			this.deviceIdFragment = new DeviceIdFragment();
-			fm.beginTransaction().add(this.deviceIdFragment, "DeviceCollector").commit();
-		}
-	}
+        Openpay openpay = ((OpenPayAppExample) getApplication()).getOpenpay();
+        String deviceIdString = openpay.getDeviceCollectorDefaultImpl().setup(this);
+        DialogFragment fragment = MessageDialogFragment.newInstance(R.string.sessionId, deviceIdString);
+        fragment.show(this.getFragmentManager(), this.getString(R.string.info));
+        TextView tv = (TextView) this.findViewById(R.id.textView3);
+        tv.setText(deviceIdString);
 
-	public void saveCard(final View view) {
-		this.addToken();
-	}
+        FragmentManager fm = this.getFragmentManager();
+        this.deviceIdFragment = (DeviceIdFragment) fm.findFragmentByTag("DeviceCollector");
+        // If not retained (or first time running), we need to create it.
+        if (this.deviceIdFragment == null) {
+            this.deviceIdFragment = new DeviceIdFragment();
+            fm.beginTransaction().add(this.deviceIdFragment, "DeviceCollector").commit();
+        }
+    }
 
-	public String getDeviceId(final View view) {
-		return this.deviceIdFragment.getDeviceId();
-	}
-	
-	private void addToken() {
-		Openpay openpay = ((OpenPayAppExample) this.getApplication()).getOpenpay();
-		Card card = new Card();
-		boolean isValid = true;
+    public void saveCard(final View view) {
+        this.addToken();
+    }
 
-		final EditText holderNameEt = ((EditText) this.findViewById(R.id.holder_name));
-		final String holderName = holderNameEt.getText().toString();
-		card.holderName(holderName);
-		if (!CardValidator.validateHolderName(holderName)) {
-			holderNameEt.setError(this.getString(R.string.invalid_holder_name));
-			isValid = false;
-		}
+    public String getDeviceId(final View view) {
+        return this.deviceIdFragment.getDeviceId();
+    }
 
-		final EditText cardNumberEt = ((EditText) this.findViewById(R.id.card_number));
-		final String cardNumber = cardNumberEt.getText().toString();
-		card.cardNumber(cardNumber);
-		if (!CardValidator.validateNumber(cardNumber)) {
-			cardNumberEt.setError(this.getString(R.string.invalid_card_number));
-			isValid = false;
-		}
+    private void addToken() {
+        Openpay openpay = ((OpenPayAppExample) this.getApplication()).getOpenpay();
+        Card card = new Card();
+        boolean isValid = true;
 
-		EditText cvv2Et = ((EditText) this.findViewById(R.id.cvv2));
-		String cvv = cvv2Et.getText().toString();
-		card.cvv2(cvv);
-		if (!CardValidator.validateCVV(cvv, cardNumber)) {
-			cvv2Et.setError(this.getString(R.string.invalid_cvv));
-			isValid = false;
-		}
+        final EditText holderNameEt = ((EditText) this.findViewById(R.id.holder_name));
+        final String holderName = holderNameEt.getText().toString();
+        card.holderName(holderName);
+        if (!CardValidator.validateHolderName(holderName)) {
+            holderNameEt.setError(this.getString(R.string.invalid_holder_name));
+            isValid = false;
+        }
 
-		Integer year = this.getInteger(((Spinner) this.findViewById(R.id.year_spinner)).getSelectedItem().toString());
+        final EditText cardNumberEt = ((EditText) this.findViewById(R.id.card_number));
+        final String cardNumber = cardNumberEt.getText().toString();
+        card.cardNumber(cardNumber);
+        if (!CardValidator.validateNumber(cardNumber)) {
+            cardNumberEt.setError(this.getString(R.string.invalid_card_number));
+            isValid = false;
+        }
 
-		Integer month = this.getInteger(((Spinner) this.findViewById(R.id.month_spinner)).getSelectedItem().toString());
+        EditText cvv2Et = ((EditText) this.findViewById(R.id.cvv2));
+        String cvv = cvv2Et.getText().toString();
+        card.cvv2(cvv);
+        if (!CardValidator.validateCVV(cvv, cardNumber)) {
+            cvv2Et.setError(this.getString(R.string.invalid_cvv));
+            isValid = false;
+        }
 
-		if (!CardValidator.validateExpiryDate(month, year)) {
-			DialogFragment fragment = MessageDialogFragment.newInstance(R.string.error,
-					this.getString(R.string.invalid_expire_date));
-			fragment.show(this.getFragmentManager(), "Error");
-			isValid = false;
-		}
+        Integer year = this.getInteger(((Spinner) this.findViewById(R.id.year_spinner)).getSelectedItem().toString());
 
-		card.expirationMonth(month);
-		card.expirationYear(year);
+        Integer month = this.getInteger(((Spinner) this.findViewById(R.id.month_spinner)).getSelectedItem().toString());
 
-		if (isValid) {
-			this.progressFragment.show(this.getSupportFragmentManager(), "progress");
-			openpay.createToken(card, this);
-		}
+        if (!CardValidator.validateExpiryDate(month, year)) {
+            DialogFragment fragment = MessageDialogFragment.newInstance(R.string.error,
+                    this.getString(R.string.invalid_expire_date));
+            fragment.show(this.getFragmentManager(), "Error");
+            isValid = false;
+        }
 
-	}
+        card.expirationMonth(month);
+        card.expirationYear(year);
 
-	@Override
-	public void onError(final OpenpayServiceException error) {
-		error.printStackTrace();
-		this.progressFragment.dismiss();
-		int desc = 0;
-		String msg = null;
-		switch (error.getErrorCode()) {
-		case 3001:
-			desc = R.string.declined;
-			msg = this.getString(desc);
-			break;
-		case 3002:
-			desc = R.string.expired;
-			msg = this.getString(desc);
-			break;
-		case 3003:
-			desc = R.string.insufficient_funds;
-			msg = this.getString(desc);
-			break;
-		case 3004:
-			desc = R.string.stolen_card;
-			msg = this.getString(desc);
-			break;
-		case 3005:
-			desc = R.string.suspected_fraud;
-			msg = this.getString(desc);
-			break;
+        if (isValid) {
+            this.progressFragment.show(this.getSupportFragmentManager(), "progress");
+            openpay.createToken(card, this);
+        }
 
-		case 2002:
-			desc = R.string.already_exists;
-			msg = this.getString(desc);
-			break;
-		default:
-			desc = R.string.error_creating_card;
-			msg = error.getDescription();
-		}
+    }
 
-		DialogFragment fragment = MessageDialogFragment.newInstance(R.string.error, msg);
-		fragment.show(this.getFragmentManager(), "Error");
-	}
+    @Override
+    public void onError(final OpenpayServiceException error) {
+        error.printStackTrace();
+        this.progressFragment.dismiss();
+        int desc = 0;
+        String msg = null;
+        switch (error.getErrorCode()) {
+            case 3001:
+                desc = R.string.declined;
+                msg = this.getString(desc);
+                break;
+            case 3002:
+                desc = R.string.expired;
+                msg = this.getString(desc);
+                break;
+            case 3003:
+                desc = R.string.insufficient_funds;
+                msg = this.getString(desc);
+                break;
+            case 3004:
+                desc = R.string.stolen_card;
+                msg = this.getString(desc);
+                break;
+            case 3005:
+                desc = R.string.suspected_fraud;
+                msg = this.getString(desc);
+                break;
 
-	@Override
-	public void onCommunicationError(final ServiceUnavailableException error) {
-		error.printStackTrace();
-		this.progressFragment.dismiss();
-		DialogFragment fragment = MessageDialogFragment.newInstance(R.string.error,
-				this.getString(R.string.communication_error));
-		fragment.show(this.getFragmentManager(), "Error");
-	}
+            case 2002:
+                desc = R.string.already_exists;
+                msg = this.getString(desc);
+                break;
+            default:
+                desc = R.string.error_creating_card;
+                msg = error.getDescription();
+        }
 
-	@Override
-	public void onSuccess(final OperationResult result) {
-		this.progressFragment.dismiss();
-		this.clearData();
-		DialogFragment fragment = MessageDialogFragment.newInstance(R.string.card_added,
-				this.getString(R.string.card_created));
-		fragment.show(this.getFragmentManager(), this.getString(R.string.info));
-	}
+        DialogFragment fragment = MessageDialogFragment.newInstance(R.string.error, msg);
+        fragment.show(this.getFragmentManager(), "Error");
+    }
 
-	private void clearData() {
-		((EditText) this.findViewById(R.id.holder_name)).setText("");
-		((EditText) this.findViewById(R.id.card_number)).setText("");
-		((EditText) this.findViewById(R.id.cvv2)).setText("");
-		((Spinner) this.findViewById(R.id.year_spinner)).setSelection(0);
-		((Spinner) this.findViewById(R.id.month_spinner)).setSelection(0);
+    @Override
+    public void onCommunicationError(final ServiceUnavailableException error) {
+        error.printStackTrace();
+        this.progressFragment.dismiss();
+        DialogFragment fragment = MessageDialogFragment.newInstance(R.string.error,
+                this.getString(R.string.communication_error));
+        fragment.show(this.getFragmentManager(), "Error");
+    }
 
-	}
+    @Override
+    public void onSuccess(final OperationResult<Token> result) {
+        this.progressFragment.dismiss();
+        this.clearData();
+        DialogFragment fragment = MessageDialogFragment.newInstance(R.string.card_added, result.getResult().getId());
+        fragment.show(this.getFragmentManager(), this.getString(R.string.info));
+    }
 
-	private Integer getInteger(final String number) {
-		try {
-			return Integer.valueOf(number);
-		} catch (NumberFormatException nfe) {
-			return 0;
-		}
-	}
+    private void clearData() {
+        ((EditText) this.findViewById(R.id.holder_name)).setText("");
+        ((EditText) this.findViewById(R.id.card_number)).setText("");
+        ((EditText) this.findViewById(R.id.cvv2)).setText("");
+        ((Spinner) this.findViewById(R.id.year_spinner)).setSelection(0);
+        ((Spinner) this.findViewById(R.id.month_spinner)).setSelection(0);
+
+    }
+
+    private Integer getInteger(final String number) {
+        try {
+            return Integer.valueOf(number);
+        } catch (NumberFormatException nfe) {
+            return 0;
+        }
+    }
 
 }
