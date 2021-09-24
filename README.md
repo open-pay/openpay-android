@@ -36,6 +36,16 @@ You must configure openpay  when instatiate it:
 	Openpay openpay = new Openpay("MERCHANT_ID", "PUBLIC_API_KEY", productionMode);
 ```
 
+For Colombia:
+```java
+	Openpay openpay = new Openpay("MERCHANT_ID", "PUBLIC_API_KEY", productionMode, OpCountry.COL);
+```
+
+For Peru:
+```java
+	Openpay openpay = new Openpay("MERCHANT_ID", "PUBLIC_API_KEY", productionMode, OpCountry.PE);
+```
+
 ### Enable sandbox Mode
 To test your implementation, there Sandox environment, which is enabled when you pass **false** value to parameter **productionMode**
 
