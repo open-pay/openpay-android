@@ -10,18 +10,20 @@ Current version: v3.0.0
 
 ## Installation
 
-1. Download de latest SDK released version (https://github.com/open-pay/openpay-android/releases/download/v3.0.0/SDK-v2.0.3.zip).
-2. You must have installed the Android SDK with API Level 19-28 and android-support-v13.
-3. Add the openpay-android library (openpay-v2.0.4.aar) to your project.
+1. Download de latest SDK released version (https://github.com/open-pay/openpay-android/releases/download/v3.0.0/openpay-android-release.aar).
+2. You must have installed the Android SDK with API Level 30.
+3. Add the openpay-android library (openpay-android-release.aar) to your project. (Look at this example if you don't known)
 4. Add the needed dependencies to your project:
 
 ```java
 dependencies {
-    implementation 'com.android.support:support-v13:28.0.0'
-    implementation 'com.google.http-client:google-http-client:1.28.0'
-    implementation 'com.google.http-client:google-http-client-android:1.28.0'
-    implementation 'com.google.http-client:google-http-client-jackson2:1.28.0'
-    implementation 'com.fasterxml.jackson.core:jackson-core:2.9.8'
+        implementation 'com.android.support:support-fragment:28.0.0'
+        implementation 'com.google.http-client:google-http-client:1.28.0'
+        implementation 'com.google.http-client:google-http-client-android:1.28.0'
+        implementation 'com.google.http-client:google-http-client-jackson2:1.28.0'
+        implementation 'com.fasterxml.jackson.core:jackson-core:2.9.8'
+        implementation 'org.slf4j:slf4j-log4j12:1.7.25'
+        ...
 }
 ```
 
