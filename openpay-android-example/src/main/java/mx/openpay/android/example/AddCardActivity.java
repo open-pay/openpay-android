@@ -15,6 +15,14 @@
  */
 package mx.openpay.android.example;
 
+import android.app.DialogFragment;
+import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import mx.openpay.android.Openpay;
 import mx.openpay.android.OperationCallBack;
 import mx.openpay.android.OperationResult;
@@ -23,16 +31,6 @@ import mx.openpay.android.exceptions.ServiceUnavailableException;
 import mx.openpay.android.model.Card;
 import mx.openpay.android.model.Token;
 import mx.openpay.android.validation.CardValidator;
-
-import android.app.DialogFragment;
-import android.app.FragmentManager;
-import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.view.View;
-import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 public class AddCardActivity extends FragmentActivity implements OperationCallBack<Token> {
 
@@ -48,19 +46,17 @@ public class AddCardActivity extends FragmentActivity implements OperationCallBa
         this.progressFragment = ProgressDialogFragment.newInstance(R.string.progress_message);
 
         Openpay openpay = ((OpenPayAppExample) getApplication()).getOpenpay();
-        String deviceIdString = openpay.getDeviceCollectorDefaultImpl().setup(this);
+
+
+        String deviceIdString = openpay.getDeviceCollectorDefaultImpl().setup(AddCardActivity.this);
+        System.out.println("deviceIdString");
+        System.out.println(deviceIdString);
         DialogFragment fragment = MessageDialogFragment.newInstance(R.string.sessionId, deviceIdString);
-        fragment.show(this.getFragmentManager(), this.getString(R.string.info));
-        TextView tv = (TextView) this.findViewById(R.id.textView3);
+        fragment.show(AddCardActivity.this.getFragmentManager(), AddCardActivity.this.getString(R.string.info));
+        TextView tv = (TextView) AddCardActivity.this.findViewById(R.id.textView3);
         tv.setText(deviceIdString);
 
-        FragmentManager fm = this.getFragmentManager();
-        this.deviceIdFragment = (DeviceIdFragment) fm.findFragmentByTag("DeviceCollector");
-        // If not retained (or first time running), we need to create it.
-        if (this.deviceIdFragment == null) {
-            this.deviceIdFragment = new DeviceIdFragment();
-            fm.beginTransaction().add(this.deviceIdFragment, "DeviceCollector").commit();
-        }
+
     }
 
     public void saveCard(final View view) {
@@ -175,7 +171,10 @@ public class AddCardActivity extends FragmentActivity implements OperationCallBa
     public void onSuccess(final OperationResult<Token> result) {
         this.progressFragment.dismiss();
         this.clearData();
-        DialogFragment fragment = MessageDialogFragment.newInstance(R.string.card_added, result.getResult().getId());
+        String cardId = result.getResult().getId();
+        System.out.println("cardId");
+        System.out.println(cardId);
+        DialogFragment fragment = MessageDialogFragment.newInstance(R.string.card_added, cardId);
         fragment.show(this.getFragmentManager(), this.getString(R.string.info));
     }
 
