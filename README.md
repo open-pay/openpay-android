@@ -1,4 +1,4 @@
-![Openpay-Android](http://www.openpay.mx/img/github/android.jpg)
+![Openpay-Android](https://www.openpay.mx/img/github/android.jpg)
 
 Android library designed to facilitate the processing collect credit card information from a devices directly invoking our services without invoking the origin server.
 
